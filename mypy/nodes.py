@@ -134,11 +134,12 @@ type_aliases: Final = {
     "typing.OrderedDict": "collections.OrderedDict",
     # HACK: a lie in lieu of actual support for PEP 675
     "typing.LiteralString": "builtins.str",
+    "typing.Sequence": "collections.abc.Sequence",
 }
 
 # This keeps track of the oldest supported Python version where the corresponding
 # alias source is available.
-type_aliases_source_versions: Final = {"typing.LiteralString": (3, 11)}
+type_aliases_source_versions: Final = {"typing.LiteralString": (3, 11), "typing.Sequence": (3, 3)}
 
 # This keeps track of aliases in `typing_extensions`, which we treat specially.
 typing_extensions_aliases: Final = {

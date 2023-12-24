@@ -487,7 +487,7 @@ class TypeChecker(NodeVisitor[None], CheckerPluginInterface):
                     all_node = all_.node
                     assert all_node is not None
                     seq_str = self.named_generic_type(
-                        "typing.Sequence", [self.named_type("builtins.str")]
+                        "_collections_abc.Sequence", [self.named_type("builtins.str")]
                     )
                     if not is_subtype(all_.type, seq_str):
                         str_seq_s, all_s = format_type_distinctly(
