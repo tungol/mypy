@@ -1,4 +1,5 @@
-from typing import Sequence, Iterator, TypeVar, Mapping, Iterable, Optional, Union, overload, Tuple, Generic, List
+from _collections_abc import Sequence
+from typing import Iterator, TypeVar, Mapping, Iterable, Optional, Union, overload, Tuple, Generic, List
 
 class object:
     def __init__(self) -> None: ...

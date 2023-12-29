@@ -104,10 +104,6 @@ class AsyncIterator(AsyncIterable[T], Protocol):
     @abstractmethod
     def __anext__(self) -> Awaitable[T]: pass
 
-class Sequence(Iterable[T_co], Container[T_co]):
-    @abstractmethod
-    def __getitem__(self, n: Any) -> T_co: pass
-
 class Mapping(Iterable[T], Generic[T, T_co], metaclass=ABCMeta):
     def keys(self) -> Iterable[T]: pass  # Approximate return type
     def __getitem__(self, key: T) -> T_co: pass

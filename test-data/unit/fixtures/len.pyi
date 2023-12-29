@@ -1,4 +1,5 @@
-from typing import Tuple, TypeVar, Generic, Union, Type, Sequence, Mapping
+from _collections_abc import Sequence
+from typing import Tuple, TypeVar, Generic, Union, Type, Mapping
 from typing_extensions import Protocol
 
 T = TypeVar("T")

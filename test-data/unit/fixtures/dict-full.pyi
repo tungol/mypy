@@ -2,8 +2,9 @@
 
 from _typeshed import SupportsKeysAndGetItem
 import _typeshed
+from _collections_abc import Sequence
 from typing import (
-    TypeVar, Generic, Iterable, Iterator, Mapping, Tuple, overload, Optional, Union, Sequence,
+    TypeVar, Generic, Iterable, Iterator, Mapping, Tuple, overload, Optional, Union,
     Self,
 )
 

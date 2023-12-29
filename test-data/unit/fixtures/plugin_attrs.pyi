@@ -1,5 +1,6 @@
 # Builtins stub used to support attrs plugin tests.
-from typing import Union, overload, Generic, Sequence, TypeVar, Type, Iterable, Iterator
+from _collections_abc import Sequence
+from typing import Union, overload, Generic, TypeVar, Type, Iterable, Iterator
 
 class object:
     def __init__(self) -> None: pass

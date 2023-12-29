@@ -132,6 +132,7 @@ TUPLE_LIKE_INSTANCE_NAMES: Final = (
     "typing.Container",
     "typing.Sequence",
     "typing.Reversible",
+    "_collections_abc.Sequence",
 )
 
 IMPORTED_REVEAL_TYPE_NAMES: Final = ("typing.reveal_type", "typing_extensions.reveal_type")

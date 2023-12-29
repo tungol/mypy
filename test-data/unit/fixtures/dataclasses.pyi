@@ -1,6 +1,7 @@
 import _typeshed
+from _collections_abc import Sequence
 from typing import (
-    Generic, Iterator, Iterable, Mapping, Optional, Sequence, Tuple,
+    Generic, Iterator, Iterable, Mapping, Optional, Tuple,
     TypeVar, Union, overload,
 )
 from typing_extensions import override

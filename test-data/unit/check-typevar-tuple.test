@@ -1751,7 +1751,8 @@ a: Any = test(42, ())
 [builtins fixtures/tuple.pyi]
 
 [case testTypeVarTupleIndexTypeVar]
-from typing import Any, List, Sequence, Tuple, TypeVar
+from _collections_abc import Sequence
+from typing import Any, List, Tuple, TypeVar
 from typing_extensions import TypeVarTuple, Unpack
 
 Ts = TypeVarTuple("Ts")

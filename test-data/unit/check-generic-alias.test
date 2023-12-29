@@ -167,7 +167,7 @@ t16: collections.abc.MutableMapping[int, str]
 t17: collections.abc.Sequence[int]
 t18: collections.abc.MutableSequence[int]
 t19: collections.abc.ByteString
-t20: collections.abc.MappingView[int, int]
+t20: collections.abc.MappingView  # see 7907#issuecomment-716094889
 t21: collections.abc.KeysView[int]
 t22: collections.abc.ItemsView[int, str]
 t23: collections.abc.ValuesView[str]
@@ -197,6 +197,7 @@ t23: collections.abc.ValuesView[str]
 # reveal_type(t22)  # Nx Revealed type is "collections.abc.ItemsView[builtins.int, builtins.str]"
 # reveal_type(t23)  # Nx Revealed type is "collections.abc.ValuesView[builtins.str]"
 [builtins fixtures/tuple.pyi]
+[typing fixtures/typing-full.pyi]
 
 
 [case testGenericBuiltinTupleTyping]

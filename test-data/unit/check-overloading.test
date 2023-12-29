@@ -1308,7 +1308,8 @@ def g(x: U, y: V) -> None:
 [case testOverloadOverlapWithTypeVars]
 from foo import *
 [file foo.pyi]
-from typing import overload, TypeVar, Sequence, List
+from _collections_abc import Sequence
+from typing import overload, TypeVar, List
 T = TypeVar('T', bound=str)
 @overload
 def f(x: Sequence[T]) -> None: pass
@@ -6520,7 +6521,8 @@ def foo(x: Callable[[int], bool]) -> str: ...
 import m
 
 [file m.pyi]
-from typing import TypeVar, Sequence, overload, List
+from _collections_abc import Sequence
+from typing import TypeVar, overload, List
 
 T = TypeVar("T", bound=str)
 
@@ -6548,7 +6550,8 @@ main:9: note:     def foo(int, /) -> Any
 main:9: note:     def foo(a: str) -> Any
 
 [case testOverloadUnionGenericBounds]
-from typing import overload, TypeVar, Sequence, Union
+from _collections_abc import Sequence
+from typing import overload, TypeVar, Union
 
 class Entity: ...
 class Assoc: ...

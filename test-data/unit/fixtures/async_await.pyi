@@ -1,8 +1,9 @@
+import _collections_abc
 import typing
 
 T = typing.TypeVar('T')
 U = typing.TypeVar('U')
-class list(typing.Sequence[T]):
+class list(_collections_abc.Sequence[T]):
     def __iter__(self) -> typing.Iterator[T]: ...
     def __getitem__(self, i: int) -> T: ...
     def __contains__(self, item: object) -> bool: ...

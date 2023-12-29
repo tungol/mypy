@@ -1,4 +1,5 @@
-from typing import Any, Iterable, Union, Dict, TypeVar, Optional, Callable, Generic, Sequence, MutableMapping
+from _collections_abc import Sequence
+from typing import Any, Callable, Dict, Generic, Iterable, MutableMapping, Optional, TypeVar, Union
 
 def namedtuple(
     typename: str,

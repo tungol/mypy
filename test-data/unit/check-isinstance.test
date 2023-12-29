@@ -1508,7 +1508,8 @@ def f(x: Union[int, A], a: Type[A]) -> None:
 [builtins fixtures/isinstancelist.pyi]
 
 [case testIssubclassUnreachable]
-from typing import Type, Sequence, Union
+from _collections_abc import Sequence
+from typing import Type, Union
 
 x: Type[str]
 if issubclass(x, int):

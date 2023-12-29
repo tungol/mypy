@@ -101,7 +101,8 @@ if int():
 
 [case testProhibitUsingVariablesAsTypesAndAllowAliasesAsTypes]
 
-from typing import TypeVar, Sequence, Type
+from _collections_abc import Sequence
+from typing import TypeVar, Type
 T = TypeVar('T')
 
 A: Type[float] = int

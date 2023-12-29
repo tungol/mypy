@@ -514,12 +514,12 @@ class StringFormatterChecker:
         star_arg = star_args[0]
         varargs_type = get_proper_type(self.chk.lookup_type(star_arg))
         if not isinstance(varargs_type, Instance) or not varargs_type.type.has_base(
-            "typing.Sequence"
+            "_collections_abc.Sequence"
         ):
             # Error should be already reported.
             return TempNode(AnyType(TypeOfAny.special_form))
         iter_info = self.chk.named_generic_type(
-            "typing.Sequence", [AnyType(TypeOfAny.special_form)]
+            "_collections_abc.Sequence", [AnyType(TypeOfAny.special_form)]
         ).type
         return TempNode(map_instance_to_supertype(varargs_type, iter_info).args[0])
 

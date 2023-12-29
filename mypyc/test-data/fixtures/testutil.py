@@ -1,10 +1,10 @@
 # Simple support library for our run tests.
 
 from contextlib import contextmanager
-from collections.abc import Iterator
 import math
+from _collections_abc import Sequence
 from typing import (
-    Any, Iterator, TypeVar, Generator, Optional, List, Tuple, Sequence,
+    Any, Iterator, TypeVar, Generator, Optional, List, Tuple,
     Union, Callable, Awaitable,
 )
 from typing import Final

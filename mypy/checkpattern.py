@@ -699,7 +699,7 @@ class PatternChecker(PatternVisitor[PatternType]):
             # which it can be promoted to, shouldn't
             if is_subtype(typ, other, ignore_promotions=True):
                 return False
-        sequence = self.chk.named_type("typing.Sequence")
+        sequence = self.chk.named_type("_collections_abc.Sequence")
         # If the static type is more general than sequence the actual type could still match
         return is_subtype(typ, sequence) or is_subtype(sequence, typ)
 
@@ -749,8 +749,8 @@ class PatternChecker(PatternVisitor[PatternType]):
                 if self.can_match_sequence(get_proper_type(item))
             ]
             return make_simplified_union(types)
-        sequence = self.chk.named_generic_type("typing.Sequence", [inner_type])
-        if is_subtype(outer_type, self.chk.named_type("typing.Sequence")):
+        sequence = self.chk.named_generic_type("_collections_abc.Sequence", [inner_type])
+        if is_subtype(outer_type, self.chk.named_type("_collections_abc.Sequence")):
             proper_type = get_proper_type(outer_type)
             if isinstance(proper_type, TupleType):
                 proper_type = tuple_fallback(proper_type)

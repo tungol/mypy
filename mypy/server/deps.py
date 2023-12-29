@@ -866,7 +866,7 @@ class DependencyVisitor(TraverserVisitor):
         If the target is not given explicitly, use the current target.
         """
         if trigger.startswith(
-            ("<builtins.", "<typing.", "<mypy_extensions.", "<typing_extensions.")
+            ("<builtins.", "<typing.", "<mypy_extensions.", "<typing_extensions.", "<_collections_abc.")
         ):
             # Don't track dependencies to certain library modules to keep the size of
             # the dependencies manageable. These dependencies should only
@@ -1109,7 +1109,7 @@ def non_trivial_bases(info: TypeInfo) -> list[TypeInfo]:
 
 
 def has_user_bases(info: TypeInfo) -> bool:
-    return any(base.module_name not in ("builtins", "typing", "enum") for base in info.mro[1:])
+    return any(base.module_name not in ("builtins", "typing", "enum", "_collections_abc") for base in info.mro[1:])
 
 
 def dump_all_dependencies(

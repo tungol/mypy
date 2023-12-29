@@ -1254,12 +1254,12 @@ class B(A): pass
 fixtup: Tuple[B, B]
 
 lst_b: List[B]
-reveal_type(fixtup if int() else lst_b)  # N: Revealed type is "typing.Sequence[__main__.B]"
-reveal_type(lst_b if int() else fixtup)  # N: Revealed type is "typing.Sequence[__main__.B]"
+reveal_type(fixtup if int() else lst_b)  # N: Revealed type is "_collections_abc.Sequence[__main__.B]"
+reveal_type(lst_b if int() else fixtup)  # N: Revealed type is "_collections_abc.Sequence[__main__.B]"
 
 lst_a: List[A]
-reveal_type(fixtup if int() else lst_a)  # N: Revealed type is "typing.Sequence[__main__.A]"
-reveal_type(lst_a if int() else fixtup)  # N: Revealed type is "typing.Sequence[__main__.A]"
+reveal_type(fixtup if int() else lst_a)  # N: Revealed type is "_collections_abc.Sequence[__main__.A]"
+reveal_type(lst_a if int() else fixtup)  # N: Revealed type is "_collections_abc.Sequence[__main__.A]"
 
 [builtins fixtures/tuple.pyi]
 [out]
@@ -1280,8 +1280,8 @@ reveal_type(empty if int() else vartup)  # N: Revealed type is "builtins.tuple[_
 reveal_type(vartup if int() else empty)  # N: Revealed type is "builtins.tuple[__main__.A, ...]"
 
 lst: List[A]
-reveal_type(empty if int() else lst)  # N: Revealed type is "typing.Sequence[__main__.A]"
-reveal_type(lst if int() else empty)  # N: Revealed type is "typing.Sequence[__main__.A]"
+reveal_type(empty if int() else lst)  # N: Revealed type is "_collections_abc.Sequence[__main__.A]"
+reveal_type(lst if int() else empty)  # N: Revealed type is "_collections_abc.Sequence[__main__.A]"
 
 [builtins fixtures/tuple.pyi]
 [out]
@@ -1474,7 +1474,7 @@ class CallableTuple(Tuple[str, T]):
 [builtins fixtures/tuple.pyi]
 
 [case testTupleCompatibleWithSequence]
-from typing import Sequence
+from _collections_abc import Sequence
 s: Sequence[str]
 s = tuple()
 reveal_type(s) # N: Revealed type is "builtins.tuple[builtins.str, ...]"

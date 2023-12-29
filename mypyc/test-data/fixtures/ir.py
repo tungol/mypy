@@ -2,9 +2,10 @@
 # test cases.
 
 import _typeshed
+from _collections_abc import Sequence
 from typing import (
     TypeVar, Generic, List, Iterator, Iterable, Dict, Optional, Tuple, Any, Set,
-    overload, Mapping, Union, Callable, Sequence, FrozenSet, Protocol
+    overload, Mapping, Union, Callable, FrozenSet, Protocol
 )
 
 T = TypeVar('T')

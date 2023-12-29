@@ -2721,7 +2721,8 @@ class A:
 [out]
 
 [case testSubtypingUnionGenericBounds]
-from typing import Callable, TypeVar, Union, Sequence
+from _collections_abc import Sequence
+from typing import Callable, TypeVar, Union
 
 TI = TypeVar("TI", bound=int)
 TS = TypeVar("TS", bound=str)

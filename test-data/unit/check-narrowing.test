@@ -2011,7 +2011,8 @@ else:
 [builtins fixtures/len.pyi]
 
 [case testNarrowingLenUnionWithUnreachable]
-from typing import Union, Sequence
+from _collections_abc import Sequence
+from typing import Union
 
 def f(x: Union[int, Sequence[int]]) -> None:
     if (

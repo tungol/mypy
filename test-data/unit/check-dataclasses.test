@@ -2046,7 +2046,8 @@ reveal_type(c)  # N: Revealed type is "__main__.Cont[builtins.str]"
 [builtins fixtures/dataclasses.pyi]
 
 [case testNoCrashOnSelfWithForwardRefGenericDataclass]
-from typing import Generic, Sequence, TypeVar, Self
+from _collections_abc import Sequence
+from typing import Generic, TypeVar, Self
 from dataclasses import dataclass
 
 _T = TypeVar('_T', bound="Foo")
@@ -2062,7 +2063,7 @@ class Element(Generic[_T]):
 @dataclass
 class Bar(Foo): ...
 e: Element[Bar]
-reveal_type(e.elements)  # N: Revealed type is "typing.Sequence[__main__.Element[__main__.Bar]]"
+reveal_type(e.elements)  # N: Revealed type is "_collections_abc.Sequence[__main__.Element[__main__.Bar]]"
 [builtins fixtures/dataclasses.pyi]
 
 [case testIfConditionsInDefinition]

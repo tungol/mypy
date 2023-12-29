@@ -479,6 +479,7 @@ def populate_non_ext_bases(builder: IRBuilder, cdef: ClassDef) -> Value:
             "typing.Reversible",
             "typing.Container",
             "typing.Sized",
+            "_collections_abc.Sequence",
         ):
             # HAX: Synthesized base classes added by mypy don't exist at runtime, so skip them.
             #      This could break if they were added explicitly, though...

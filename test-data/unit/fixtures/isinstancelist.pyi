@@ -1,5 +1,6 @@
+from _collections_abc import Sequence
 from typing import (
-    Iterable, Iterator, TypeVar, List, Mapping, overload, Tuple, Set, Union, Generic, Sequence
+    Iterable, Iterator, TypeVar, List, Mapping, overload, Tuple, Set, Union, Generic
 )
 
 class object:

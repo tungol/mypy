@@ -1,5 +1,6 @@
 # Builtins stub used in check-narrowing test cases.
-from typing import Generic, Sequence, Tuple, Type, TypeVar, Union
+from _collections_abc import Sequence
+from typing import Generic, Tuple, Type, TypeVar, Union
 
 
 Tco = TypeVar('Tco', covariant=True)

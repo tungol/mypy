@@ -1,7 +1,8 @@
 -- Tests checking that basic functionality works
 
 [case testRecursiveAliasBasic]
-from typing import Dict, List, Union, TypeVar, Sequence
+from _collections_abc import Sequence
+from typing import Dict, List, Union, TypeVar
 
 JSON = Union[str, List[JSON], Dict[str, JSON]]
 
@@ -16,7 +17,8 @@ x = ["foo", {"bar": [Bad()]}]  # E: List item 0 has incompatible type "Bad"; exp
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasBasicGenericSubtype]
-from typing import Union, TypeVar, Sequence, List
+from _collections_abc import Sequence
+from typing import Union, TypeVar, List
 
 T = TypeVar("T")
 
@@ -35,7 +37,8 @@ xx = yy  # OK
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasBasicGenericInference]
-from typing import Union, TypeVar, Sequence, List
+from _collections_abc import Sequence
+from typing import Union, TypeVar, List
 
 T = TypeVar("T")
 
@@ -58,7 +61,8 @@ x = [1, [Bad()]]  # E: List item 0 has incompatible type "Bad"; expected "Union[
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasGenericInferenceNested]
-from typing import Union, TypeVar, Sequence, List
+from _collections_abc import Sequence
+from typing import Union, TypeVar, List
 
 T = TypeVar("T")
 class A: ...
@@ -201,7 +205,8 @@ my_eval(A([B(1), B(2)]))
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasesSimplifiedUnion]
-from typing import Sequence, TypeVar, Union
+from _collections_abc import Sequence
+from typing import TypeVar, Union
 
 class A: ...
 class B(A): ...
@@ -221,7 +226,8 @@ x = y  # E: Incompatible types in assignment (expression has type "Sequence[Unio
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasesJoins]
-from typing import Sequence, TypeVar, Union
+from _collections_abc import Sequence
+from typing import TypeVar, Union
 
 class A: ...
 class B(A): ...
@@ -246,7 +252,8 @@ x = y3  # E: Incompatible types in assignment (expression has type "Sequence[Uni
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasesRestrictions]
-from typing import Sequence, Mapping, Union
+from _collections_abc import Sequence
+from typing import Mapping, Union
 
 A = Sequence[Union[int, A]]
 B = Mapping[int, Union[int, B]]
@@ -260,7 +267,8 @@ else:
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasesRestrictions2]
-from typing import Sequence, Union
+from _collections_abc import Sequence
+from typing import Union
 
 class A: ...
 class B(A): ...
@@ -283,7 +291,8 @@ if isinstance(b[0], Sequence):
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasWithRecursiveInstance]
-from typing import Sequence, Union, TypeVar
+from _collections_abc import Sequence
+from typing import Union, TypeVar
 
 class A: ...
 T = TypeVar("T")
@@ -298,12 +307,13 @@ a = [[b]]  # OK
 b = aa  # E: Incompatible types in assignment (expression has type "Nested[A]", variable has type "B")
 
 def join(a: T, b: T) -> T: ...
-reveal_type(join(a, b))  # N: Revealed type is "typing.Sequence[Union[__main__.A, typing.Sequence[Union[__main__.A, ...]]]]"
-reveal_type(join(b, a))  # N: Revealed type is "typing.Sequence[Union[__main__.A, typing.Sequence[Union[__main__.A, ...]]]]"
+reveal_type(join(a, b))  # N: Revealed type is "_collections_abc.Sequence[Union[__main__.A, _collections_abc.Sequence[Union[__main__.A, ...]]]]"
+reveal_type(join(b, a))  # N: Revealed type is "_collections_abc.Sequence[Union[__main__.A, _collections_abc.Sequence[Union[__main__.A, ...]]]]"
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasWithRecursiveInstanceInference]
-from typing import Sequence, Union, TypeVar, List
+from _collections_abc import Sequence
+from typing import Union, TypeVar, List
 
 T = TypeVar("T")
 Nested = Sequence[Union[T, Nested[T]]]
@@ -323,7 +333,8 @@ reveal_type(bar(nib))  # N: Revealed type is "__main__.B"
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasTopUnion]
-from typing import Sequence, Union, TypeVar, List
+from _collections_abc import Sequence
+from typing import Union, TypeVar, List
 
 class A: ...
 class B(A): ...
@@ -347,7 +358,8 @@ reveal_type(foo(xx))  # N: Revealed type is "__main__.B"
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasInferenceExplicitNonRecursive]
-from typing import Sequence, Union, TypeVar, List
+from _collections_abc import Sequence
+from typing import Union, TypeVar, List
 
 T = TypeVar("T")
 Nested = Sequence[Union[T, Nested[T]]]
@@ -373,7 +385,8 @@ reveal_type(bar(llla))  # N: Revealed type is "__main__.A"
 [builtins fixtures/isinstancelist.pyi]
 
 [case testRecursiveAliasesWithOptional]
-from typing import Optional, Sequence
+from _collections_abc import Sequence
+from typing import Optional
 
 A = Sequence[Optional[A]]
 x: A
@@ -784,18 +797,19 @@ reveal_type(std)  # N: Revealed type is "TypedDict('__main__.STD', {'val': built
 [typing fixtures/typing-typeddict.pyi]
 
 [case testRecursiveClassLevelAlias]
-from typing import Union, Sequence
+from _collections_abc import Sequence
+from typing import Union
 
 class A:
     Children = Union[Sequence['Children'], 'A', None]
 x: A.Children
-reveal_type(x)  # N: Revealed type is "Union[typing.Sequence[...], __main__.A, None]"
+reveal_type(x)  # N: Revealed type is "Union[_collections_abc.Sequence[...], __main__.A, None]"
 
 class B:
     Foo = Sequence[Bar]
     Bar = Sequence[Foo]
 y: B.Foo
-reveal_type(y)  # N: Revealed type is "typing.Sequence[typing.Sequence[...]]"
+reveal_type(y)  # N: Revealed type is "_collections_abc.Sequence[_collections_abc.Sequence[...]]"
 [builtins fixtures/tuple.pyi]
 
 [case testNoCrashOnRecursiveTupleFallback]
@@ -814,7 +828,8 @@ def test3() -> Tree3:
 [builtins fixtures/tuple.pyi]
 
 [case testRecursiveDoubleUnionNoCrash]
-from typing import Tuple, Union, Callable, Sequence
+from _collections_abc import Sequence
+from typing import Tuple, Union, Callable
 
 K = Union[int, Tuple[Union[int, K]]]
 L = Union[int, Callable[[], Union[int, L]]]
@@ -832,7 +847,8 @@ z = x  # OK
 [builtins fixtures/tuple.pyi]
 
 [case testRecursiveInstanceInferenceNoCrash]
-from typing import Sequence, TypeVar, Union
+from _collections_abc import Sequence
+from typing import TypeVar, Union
 
 class C(Sequence[C]): ...
 

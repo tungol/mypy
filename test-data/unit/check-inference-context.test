@@ -987,7 +987,8 @@ class C:
         self.x = int()
 
 [case testInferTypeVariableFromTwoGenericTypes1]
-from typing import TypeVar, List, Sequence
+from _collections_abc import Sequence
+from typing import TypeVar, List
 
 T = TypeVar('T')
 
@@ -1403,7 +1404,8 @@ def f(x: Union[Iterable[str], Any]) -> None:
 [builtins fixtures/list.pyi]
 
 [case testInferMultipleAnyUnionCovariant]
-from typing import Any, Mapping, Sequence, Union
+from _collections_abc import Sequence
+from typing import Any, Mapping, Union
 
 def foo(x: Union[Mapping[Any, Any], Mapping[Any, Sequence[Any]]]) -> None:
     ...
@@ -1411,7 +1413,8 @@ foo({1: 2})
 [builtins fixtures/dict.pyi]
 
 [case testInferMultipleAnyUnionInvariant]
-from typing import Any, Dict, Sequence, Union
+from _collections_abc import Sequence
+from typing import Any, Dict, Union
 
 def foo(x: Union[Dict[Any, Any], Dict[Any, Sequence[Any]]]) -> None:
     ...
@@ -1419,7 +1422,8 @@ foo({1: 2})
 [builtins fixtures/dict.pyi]
 
 [case testInferMultipleAnyUnionDifferentVariance]
-from typing import Any, Dict, Mapping, Sequence, Union
+from _collections_abc import Sequence
+from typing import Any, Dict, Mapping, Union
 
 def foo(x: Union[Dict[Any, Any], Mapping[Any, Sequence[Any]]]) -> None:
     ...

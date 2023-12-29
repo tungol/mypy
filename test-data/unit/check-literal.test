@@ -931,7 +931,8 @@ c2 = c3
 [out]
 
 [case testLiteralInListAndSequence]
-from typing import List, Sequence
+from _collections_abc import Sequence
+from typing import List
 from typing_extensions import Literal
 
 def foo(x: List[Literal[1, 2]]) -> None: pass

@@ -2077,7 +2077,7 @@ class MessageBuilder:
         # List of special situations where we don't want to report additional problems
         exclusions: dict[type, list[str]] = {
             TypedDictType: ["typing.Mapping"],
-            TupleType: ["typing.Iterable", "typing.Sequence"],
+            TupleType: ["typing.Iterable", "_collections_abc.Sequence"],
         }
         if supertype.type.fullname in exclusions.get(type(subtype), []):
             return

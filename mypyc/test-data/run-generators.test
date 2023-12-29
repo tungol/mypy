@@ -296,7 +296,8 @@ def exc_info() -> Any:
 
 [file driver.py]
 import sys
-from typing import Generator, Tuple, TypeVar, Sequence
+from _collections_abc import Sequence
+from typing import Generator, Tuple, TypeVar
 from native import generator, ctx_manager, wrapper, no_except, raise_something
 
 T = TypeVar('T')
@@ -351,7 +352,7 @@ with ctx_manager() as c:
     yield 2
   File "native.py", line 8, in generator
     yield 1
-  File "driver.py", line 31, in <module>
+  File "driver.py", line 32, in <module>
     raise Exception
   File "native.py", line 10, in generator
     yield 3

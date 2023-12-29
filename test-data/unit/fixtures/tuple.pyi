@@ -1,7 +1,8 @@
 # Builtins stub used in tuple-related test cases.
 
 import _typeshed
-from typing import Iterable, Iterator, TypeVar, Generic, Sequence, Optional, overload, Tuple, Type
+from _collections_abc import Sequence
+from typing import Iterable, Iterator, TypeVar, Generic, Optional, overload, Tuple, Type
 
 T = TypeVar("T")
 Tco = TypeVar('Tco', covariant=True)

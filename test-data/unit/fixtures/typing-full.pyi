@@ -6,6 +6,7 @@
 # Many of the definitions have special handling in the type checker, so they
 # can just be initialized to anything.
 
+from _collections_abc import Sequence
 from abc import abstractmethod, ABCMeta
 
 class GenericMeta(type): pass
@@ -128,10 +129,6 @@ class AsyncIterator(AsyncIterable[T], Protocol):
     @abstractmethod
     def __anext__(self) -> Awaitable[T]: pass
 
-class Sequence(Iterable[T_co], Container[T_co]):
-    @abstractmethod
-    def __getitem__(self, n: Any) -> T_co: pass
-
 class MutableSequence(Sequence[T]):
     @abstractmethod
     def __setitem__(self, n: Any, o: T) -> None: pass
@@ -183,6 +180,20 @@ class _TypedDict(Mapping[str, object]):
     def __delitem__(self, k: NoReturn) -> None: ...
 
 class _SpecialForm: pass
+
+class Collection(Iterable[T_co], Container[T_co], Protocol[T_co]):
+    @abstractmethod
+    def __len__(self) -> int: ...
+
+class AbstractSet(Collection[T_co], metaclass=ABCMeta): pass
+class MappingView(Sized, metaclass=ABCMeta): pass
+class ItemsView(MappingView, AbstractSet[tuple[T, U]], Generic[T, U], metaclass=ABCMeta): pass
+class KeysView(MappingView, AbstractSet[T], metaclass=ABCMeta): pass
+class MutableSet(AbstractSet[T], metaclass=ABCMeta): pass
+class Reversible(Iterable[T_co], Protocol[T_co]): pass
+class ValuesView(MappingView, Collection[U], metaclass=ABCMeta): pass
+class ByteString: pass
+
 
 def dataclass_transform(
     *,

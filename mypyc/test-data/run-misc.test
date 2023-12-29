@@ -188,7 +188,8 @@ exit! a ohno
 caught
 
 [case testDisplays]
-from typing import List, Set, Tuple, Sequence, Dict, Any, Mapping
+from _collections_abc import Sequence
+from typing import List, Set, Tuple, Dict, Any, Mapping
 
 def listDisplay(x: List[int], y: List[int]) -> List[int]:
     return [1, 2, *x, *y, 3]

@@ -94,7 +94,7 @@ match m:
 [builtins fixtures/list.pyi]
 
 [case testMatchSequencePatternCapturesStarred]
-from typing import Sequence
+from _collections_abc import Sequence
 m: Sequence[int]
 
 match m:
@@ -104,60 +104,60 @@ match m:
 [builtins fixtures/list.pyi]
 
 [case testMatchSequencePatternNarrowsInner]
-from typing import Sequence
+from _collections_abc import Sequence
 m: Sequence[object]
 
 match m:
     case [1, True]:
-        reveal_type(m)  # N: Revealed type is "typing.Sequence[builtins.int]"
+        reveal_type(m)  # N: Revealed type is "_collections_abc.Sequence[builtins.int]"
 
 [case testMatchSequencePatternNarrowsOuter]
-from typing import Sequence
+from _collections_abc import Sequence
 m: object
 
 match m:
     case [1, True]:
-        reveal_type(m)  # N: Revealed type is "typing.Sequence[builtins.int]"
+        reveal_type(m)  # N: Revealed type is "_collections_abc.Sequence[builtins.int]"
 
 [case testMatchSequencePatternAlreadyNarrowerInner]
-from typing import Sequence
+from _collections_abc import Sequence
 m: Sequence[bool]
 
 match m:
     case [1, True]:
-        reveal_type(m)  # N: Revealed type is "typing.Sequence[builtins.bool]"
+        reveal_type(m)  # N: Revealed type is "_collections_abc.Sequence[builtins.bool]"
 
 [case testMatchSequencePatternAlreadyNarrowerOuter]
-from typing import Sequence
+from _collections_abc import Sequence
 m: Sequence[object]
 
 match m:
     case [1, True]:
-        reveal_type(m)  # N: Revealed type is "typing.Sequence[builtins.int]"
+        reveal_type(m)  # N: Revealed type is "_collections_abc.Sequence[builtins.int]"
 
 [case testMatchSequencePatternAlreadyNarrowerBoth]
-from typing import Sequence
+from _collections_abc import Sequence
 m: Sequence[bool]
 
 match m:
     case [1, True]:
-        reveal_type(m)  # N: Revealed type is "typing.Sequence[builtins.bool]"
+        reveal_type(m)  # N: Revealed type is "_collections_abc.Sequence[builtins.bool]"
 
 [case testMatchNestedSequencePatternNarrowsInner]
-from typing import Sequence
+from _collections_abc import Sequence
 m: Sequence[Sequence[object]]
 
 match m:
     case [[1], [True]]:
-        reveal_type(m)  # N: Revealed type is "typing.Sequence[typing.Sequence[builtins.int]]"
+        reveal_type(m)  # N: Revealed type is "_collections_abc.Sequence[_collections_abc.Sequence[builtins.int]]"
 
 [case testMatchNestedSequencePatternNarrowsOuter]
-from typing import Sequence
+from _collections_abc import Sequence
 m: object
 
 match m:
     case [[1], [True]]:
-        reveal_type(m)  # N: Revealed type is "typing.Sequence[typing.Sequence[builtins.int]]"
+        reveal_type(m)  # N: Revealed type is "_collections_abc.Sequence[_collections_abc.Sequence[builtins.int]]"
 
 [case testMatchSequencePatternDoesntNarrowInvariant]
 from typing import List
@@ -170,7 +170,8 @@ match m:
 
 [case testMatchSequencePatternMatches]
 import array, collections
-from typing import Sequence, Iterable
+from _collections_abc import Sequence
+from typing import Iterable
 
 m1: object
 m2: Sequence[int]
@@ -1327,15 +1328,16 @@ def f(value: Literal[1] | Literal[2]) -> int:
 [typing fixtures/typing-medium.pyi]
 
 [case testMatchSequencePatternNegativeNarrowing]
-from typing import Union, Sequence, Tuple
+from _collections_abc import Sequence
+from typing import Union, Tuple
 
 m1: Sequence[int | str]
 
 match m1:
     case [int()]:
-        reveal_type(m1)  # N: Revealed type is "typing.Sequence[builtins.int]"
+        reveal_type(m1)  # N: Revealed type is "_collections_abc.Sequence[builtins.int]"
     case r:
-        reveal_type(m1)  # N: Revealed type is "typing.Sequence[Union[builtins.int, builtins.str]]"
+        reveal_type(m1)  # N: Revealed type is "_collections_abc.Sequence[Union[builtins.int, builtins.str]]"
 
 m2: Tuple[int | str]
 

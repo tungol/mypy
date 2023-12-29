@@ -1,4 +1,5 @@
-from typing import overload, Any, Generic, Sequence, Tuple, TypeVar, Optional
+from _collections_abc import Sequence
+from typing import overload, Any, Generic, Tuple, TypeVar, Optional
 
 Tco = TypeVar('Tco', covariant=True)
 

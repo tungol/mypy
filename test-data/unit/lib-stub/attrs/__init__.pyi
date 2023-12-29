@@ -1,4 +1,5 @@
-from typing import TypeVar, overload, Callable, Any, Optional, Union, Sequence, Mapping, \
+from _collections_abc import Sequence
+from typing import TypeVar, overload, Callable, Any, Optional, Union, Mapping, \
     Protocol, ClassVar, Type
 from typing_extensions import TypeGuard
 

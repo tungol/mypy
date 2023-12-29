@@ -439,7 +439,8 @@ assert a.foo() == 11
 assert foo() == 21
 
 [case testGenericClass]
-from typing import TypeVar, Generic, Sequence
+from _collections_abc import Sequence
+from typing import TypeVar, Generic
 T = TypeVar('T')
 class C(Generic[T]):
     x: T

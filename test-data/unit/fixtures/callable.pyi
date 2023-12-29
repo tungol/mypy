@@ -1,5 +1,9 @@
 from typing import Generic, Tuple, TypeVar, Union
 
+# _collections_abc needs to be loaded for certain special behaviors of mypy
+# to work correctly, even though we don't use it in this version of builtins.pyi
+import _collections_abc
+
 T = TypeVar('T')
 
 class object:

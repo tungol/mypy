@@ -1,6 +1,7 @@
 # Builtins stub used in list-related test cases.
 
-from typing import TypeVar, Generic, Iterable, Iterator, Sequence, overload
+from _collections_abc import Sequence
+from typing import TypeVar, Generic, Iterable, Iterator, overload
 
 T = TypeVar('T')
 

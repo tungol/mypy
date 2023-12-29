@@ -115,6 +115,13 @@ def parse_test_case(case: DataDrivenTestCase) -> None:
             src_path = join(os.path.dirname(case.file), item.arg)
             with open(src_path, encoding="utf8") as f:
                 files.append((join(base_path, "typing.pyi"), f.read()))
+            # TODO: this is pretty hacky
+            # Should probably make _collections_abc stub it's own configuration
+            # rather than piggy-backing on [typing]
+            _c_abc = 'fixtures/_collections_abc-' + item.arg[16:]
+            src_path = join(os.path.dirname(case.file), _c_abc)
+            with open(src_path, encoding="utf8") as f:
+                files.append((join(base_path, "_collections_abc.pyi"), f.read()))
         elif item.id == "_typeshed":
             # Use an alternative stub file for the _typeshed module.
             assert item.arg is not None

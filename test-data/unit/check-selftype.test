@@ -1455,7 +1455,8 @@ class ThingCollection(Generic[T]):
 
 [case testDequeReturningSelfFromCopy]
 # Tests a bug with generic self types identified in issue #12641
-from typing import Generic, Sequence, TypeVar
+from _collections_abc import Sequence
+from typing import Generic, TypeVar
 
 T = TypeVar("T")
 Self = TypeVar("Self")

@@ -1,4 +1,5 @@
-from typing import TypeVar, overload, Callable, Any, Type, Optional, Union, Sequence, Mapping, Generic
+from _collections_abc import Sequence
+from typing import TypeVar, overload, Callable, Any, Type, Optional, Union, Mapping, Generic
 
 _T = TypeVar('_T')
 _C = TypeVar('_C', bound=type)

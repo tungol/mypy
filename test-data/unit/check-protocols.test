@@ -603,7 +603,8 @@ class P(Protocol[T]): # E: Invariant type variable "T" used in protocol where co
     attr: int
 
 [case testGenericProtocolsInference1]
-from typing import Protocol, Sequence, TypeVar
+from _collections_abc import Sequence
+from typing import Protocol, TypeVar
 
 T = TypeVar('T', covariant=True)
 
@@ -855,7 +856,8 @@ y = x # OK
 [builtins fixtures/list.pyi]
 
 [case testSubtleBadVarianceInProtocols]
-from typing import Protocol, TypeVar, Iterable, Sequence
+from _collections_abc import Sequence
+from typing import Protocol, TypeVar, Iterable
 
 T_co = TypeVar('T_co', covariant=True)
 T_contra = TypeVar('T_contra', contravariant=True)
@@ -877,7 +879,8 @@ y = x # OK
 -- ------------------------
 
 [case testRecursiveProtocols1]
-from typing import Protocol, Sequence, List, Generic, TypeVar
+from _collections_abc import Sequence
+from typing import Protocol, List, Generic, TypeVar
 
 T = TypeVar('T')
 
@@ -931,7 +934,8 @@ def last(seq: Linked[T]) -> T:
 last(L()) # E: Argument 1 to "last" has incompatible type "L"; expected "Linked[Never]"
 
 [case testMutuallyRecursiveProtocols]
-from typing import Protocol, Sequence, List
+from _collections_abc import Sequence
+from typing import Protocol, List
 
 class P1(Protocol):
     @property
@@ -955,7 +959,8 @@ if int():
 [typing fixtures/typing-medium.pyi]
 
 [case testMutuallyRecursiveProtocolsTypesWithSubteMismatch]
-from typing import Protocol, Sequence, List
+from _collections_abc import Sequence
+from typing import Protocol, List
 
 class P1(Protocol):
     @property
@@ -1468,7 +1473,8 @@ def g(x: P, y: C) -> None: pass
 reveal_type(f(g)) # N: Revealed type is "__main__.C"
 
 [case testInferProtocolFromProtocol]
-from typing import Protocol, Sequence, TypeVar, Generic
+from _collections_abc import Sequence
+from typing import Protocol, TypeVar, Generic
 
 T = TypeVar('T')
 class Box(Protocol[T]):
@@ -2298,7 +2304,8 @@ main:15: note:     Got:
 main:15: note:         def execute(self, stmt: Any, *args: Any, **kwargs: Any) -> None
 
 [case testDontShowNotesForTupleAndIterableProtocol]
-from typing import Iterable, Sequence, Protocol, NamedTuple
+from _collections_abc import Sequence
+from typing import Iterable, Protocol, NamedTuple
 
 class N(NamedTuple):
     x: int
@@ -2421,7 +2428,8 @@ y: PBad = None  # E: Incompatible types in assignment (expression has type "None
 [out]
 
 [case testOnlyMethodProtocolUsableWithIsSubclass]
-from typing import Protocol, runtime_checkable, Union, Type, Sequence, overload
+from _collections_abc import Sequence
+from typing import Protocol, runtime_checkable, Union, Type, overload
 @runtime_checkable
 class P(Protocol):
     def meth(self) -> int:

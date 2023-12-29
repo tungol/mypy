@@ -240,7 +240,8 @@ def f(x: object) -> None:
             print(rest2, type(rest2))
 
 [file driver.py]
-from collections.abc import Mapping, Sequence
+from _collections_abc import Sequence
+from collections.abc import Mapping
 
 from native import f
 

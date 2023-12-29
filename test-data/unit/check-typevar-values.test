@@ -611,7 +611,8 @@ class A:
 [out]
 
 [case testParameterLessGenericAsRestriction]
-from typing import Sequence, Iterable, TypeVar
+from _collections_abc import Sequence
+from typing import Iterable, TypeVar
 S = TypeVar('S', Sequence, Iterable)
 def my_len(s: S) -> None: pass
 def crash() -> None: my_len((0,))

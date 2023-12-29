@@ -93,7 +93,8 @@ L0:
     return r3
 
 [case testTupleDisplay]
-from typing import Sequence, Tuple
+from _collections_abc import Sequence
+from typing import Tuple
 def f(x: Sequence[int], y: Sequence[int]) -> Tuple[int, ...]:
     return (1, 2, *x, *y, 3)
 [out]

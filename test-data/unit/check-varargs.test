@@ -23,7 +23,8 @@ class C: pass
 
 
 [case testVarArgsAreTuple]
-from typing import Tuple, Sequence
+from _collections_abc import Sequence
+from typing import Tuple
 def want_tuple(types: Tuple[type, ...]): pass
 def want_sequence(types: Sequence[type]): pass
 def test(*t: type) -> None:
@@ -668,7 +669,8 @@ C().foo()
 C().foo(1)  # The decorator's return type says this should be okay
 
 [case testInvariantDictArgNote]
-from typing import Dict, Sequence
+from _collections_abc import Sequence
+from typing import Dict
 def f(x: Dict[str, Sequence[int]]) -> None: pass
 def g(x: Dict[str, float]) -> None: pass
 def h(x: Dict[str, int]) -> None: pass

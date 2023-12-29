@@ -1,4 +1,5 @@
-from typing import Any, Dict, Generic, TypeVar, Sequence
+from _collections_abc import Sequence
+from typing import Any, Dict, Generic, TypeVar
 from types import ModuleType
 
 T = TypeVar('T')

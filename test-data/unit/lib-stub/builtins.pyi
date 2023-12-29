@@ -23,7 +23,8 @@ class function:
     __name__: str
 class ellipsis: pass
 
-from typing import Generic, Iterator, Sequence, TypeVar
+from _collections_abc import Sequence
+from typing import Generic, Iterator, TypeVar
 _T = TypeVar('_T')
 class list(Generic[_T], Sequence[_T]):
     def __contains__(self, item: object) -> bool: pass

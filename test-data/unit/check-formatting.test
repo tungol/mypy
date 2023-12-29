@@ -211,7 +211,8 @@ c: Union[Tuple[str, int], Tuple[str, int, str]] = ('A', 1)
 [builtins fixtures/tuple.pyi]
 
 [case testStringInterpolationIterableType]
-from typing import Sequence, List, Tuple, Iterable
+from _collections_abc import Sequence
+from typing import List, Tuple, Iterable
 
 t1: Sequence[str] = ('A', 'B')
 t2: List[str] = ['A', 'B']

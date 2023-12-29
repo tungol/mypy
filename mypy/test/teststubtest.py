@@ -38,6 +38,7 @@ TEST_MODULE_NAME = "test_module"
 
 
 stubtest_typing_stub = """
+from _collections_abc import Sequence
 Any = object()
 
 class _SpecialForm:
@@ -67,7 +68,6 @@ class Iterable(Generic[_T_co]): ...
 class Iterator(Iterable[_T_co]): ...
 class Mapping(Generic[_K, _V]): ...
 class Match(Generic[AnyStr]): ...
-class Sequence(Iterable[_T_co]): ...
 class Tuple(Sequence[_T_co]): ...
 class NamedTuple(tuple[Any, ...]): ...
 def overload(func: _T) -> _T: ...
@@ -76,7 +76,8 @@ def final(func: _T) -> _T: ...
 """
 
 stubtest_builtins_stub = """
-from typing import Generic, Mapping, Sequence, TypeVar, overload
+from _collections_abc import Sequence
+from typing import Generic, Mapping, TypeVar, overload
 
 T = TypeVar('T')
 T_co = TypeVar('T_co', covariant=True)
@@ -143,11 +144,28 @@ class Flag(Enum):
         __rxor__ = __xor__
 """
 
+stubtest__collections_abc_stub = """
+from typing import (
+    Callable as Callable,
+    Coroutine as Coroutine,
+    Iterable as Iterable,
+    Iterator as Iterator,
+    Mapping as Mapping,
+    TypeVar,
+)
+
+_T_co = TypeVar('_T_co', covariant=True)
+
+class Sequence(Iterable[_T_co]): ...
+"""
+
 
 def run_stubtest(
     stub: str, runtime: str, options: list[str], config_file: str | None = None
 ) -> str:
     with use_tmp_dir(TEST_MODULE_NAME) as tmp_dir:
+        with open("_collections_abc.pyi", 'w') as f:
+            f.write(stubtest__collections_abc_stub)
         with open("builtins.pyi", "w") as f:
             f.write(stubtest_builtins_stub)
         with open("typing.pyi", "w") as f:
