@@ -6,6 +6,7 @@ Verify that various things in stubs are consistent with how things behave at run
 
 from __future__ import annotations
 
+import abc
 import argparse
 import collections.abc
 import copy
@@ -502,6 +503,193 @@ def _verify_metaclass(
             )
 
 
+def _is_abc_registered(subclass: type[Any], cls: abc.ABCMeta) -> bool:
+    abc_dump = abc._get_dump(cls)
+    _abc_registry = abc_dump[0]
+    _abc_cache = abc_dump[1]
+    for ref in _abc_cache:
+        if ref() is subclass:
+            return True
+    for ref in _abc_registry:
+        if ref() is subclass:
+            return True
+    return False
+
+
+def _find_abcs_for_runtime(
+    stub_bases: list[tuple[str, str]], runtime_bases: list[tuple[str, str]], runtime: type[Any]
+) -> None:
+    """Find ABCs that runtime is directly registered to.
+
+    Modifies runtime_bases in-place.
+    """
+    found_bases = []
+    for base in stub_bases:
+        if base not in runtime_bases:
+            try:
+                mod = silent_import_module(base[0])
+                runtime_base = getattr(mod, base[1], None)
+                origin = get_origin(runtime_base)
+                if origin:
+                    runtime_base = origin
+
+                if type(runtime_base) is abc.ABCMeta:
+                    if _is_abc_registered(runtime, runtime_base):
+                        found_bases.append(base)
+            except ModuleNotFoundError:
+                continue
+
+    index_skew = 0
+    for i, base in enumerate(stub_bases):
+        if base in runtime_bases:
+            continue
+
+        if base in found_bases:
+            if runtime_bases == [("builtins", "object")]:
+                del runtime_bases[0]
+            runtime_bases.insert(i + index_skew, base)
+        else:
+            index_skew -= 1
+
+
+def _verify_inheritance(
+    stub: nodes.TypeInfo, runtime: type[Any], object_path: list[str]
+) -> Iterator[Error]:
+    # If you want to be strict, just check whether stub_bases == runtime_bases
+    stub_bases = [(t.type.module_name, t.type.name) for t in stub.bases]
+    runtime_bases = [(t.__module__, t.__name__) for t in runtime.__bases__]
+
+    # convert typing aliases into their origins
+    for i, base in enumerate(stub_bases):
+        if base[0] not in ("typing", "typing_extensions"):
+            continue
+        runtime_base = getattr(typing, base[1], None)
+        if not runtime_base:
+            continue
+        origin = get_origin(runtime_base)
+        if not origin:
+            continue
+        origin_base = (origin.__module__, origin.__name__)
+        if origin_base in runtime_bases and base not in runtime_bases:
+            stub_bases[i] = origin_base
+
+    # if one of the stub's bases in an ABC, check whether the runtime
+    # is registered to that ABC. If so, add it as a base for runtime too.
+    _find_abcs_for_runtime(stub_bases, runtime_bases, runtime)
+
+    # typing.Generic and typing.Protocol are removed from the stub's list of bases by mypy.
+    # This recovers them so we can discover classes which are a Protocol at runtime but not
+    # in the stubs. Special handling for Protocol so we don't distinguish whether it came from
+    # typing or typing_extensions.
+    protocol_base = ("typing", "Protocol")
+    protocol_extensions_base = ("typing_extensions", "Protocol")
+    for thing in stub.defn.removed_base_type_exprs:
+        if isinstance(thing, nodes.IndexExpr):
+            thing_name = thing.base.fullname
+        else:
+            thing_name = thing.node.fullname
+        removed_base = tuple(thing_name.rsplit(".", maxsplit=1))
+        if removed_base in runtime_bases:
+            stub_bases.append(removed_base)
+        elif removed_base == protocol_base and protocol_extensions_base in runtime_bases:
+            stub_bases.append(protocol_extensions_base)
+        elif removed_base == protocol_extensions_base and protocol_base in runtime_bases:
+            stub_bases.append(protocol_base)
+
+    # Next we filter the bases, taking out things from _typeshed, private classes, or
+    # typing-related things that are in the stub but not a base a runtime. We do keep
+    # typing-related things that are a base at runtime but missing from the stub.
+    # Also remove object so if we filter everything out, it's like we inherit from object.
+    def is_good_base_stub(base: tuple[str, str]) -> bool:
+        module_name, class_name = base
+        return not (
+            module_name == "_typeshed"
+            or (class_name.startswith("_") and base not in runtime_bases)
+            or (module_name in ("typing", "typing_extenstions") and base not in runtime_bases)
+            or (module_name, class_name) == ("builtins", "object")
+        )
+
+    def is_good_base_runtime(base: tuple[str, str]) -> bool:
+        return base != ("builtins", "object")
+
+    stub_filtered_bases = [b for b in stub_bases if is_good_base_stub(b)]
+    runtime_filtered_bases = [b for b in runtime_bases if is_good_base_runtime(b)]
+
+    # Compare our filtered bases for runtime and the stub. The base module name
+    # should match, but we don't mind if it's `_modulename` versus `modulename`
+    # or `modulename.submodule1` versus `modulename.submodule2`
+    stub_names = [i[1] for i in stub_filtered_bases]
+    runtime_names = [i[1] for i in runtime_filtered_bases]
+    if stub_names == runtime_names:
+        all_match = True
+        for i, stub_base in enumerate(stub_filtered_bases):
+            runtime_base = runtime_filtered_bases[i]
+
+            if stub_base == runtime_base:
+                continue
+
+            stub_mod_path = stub_base[0].split(".")
+            runtime_mod_path = runtime_base[0].split(".")
+            if stub_mod_path[0].lstrip("_") == runtime_mod_path[0].lstrip("_"):
+                continue
+
+            all_match = False
+
+        if all_match:
+            return
+
+    # These cause nothing but trouble
+    if issubclass(runtime, tuple):
+        return
+
+    # If there are extra steps in the inheritance hierarchy, a check against filtered base classes
+    # can fail, even if the MROs are similar enough that we don't want to raise an error
+    stub_mro = [(t.module_name, t.name) for t in stub.mro]
+    runtime_mro = [(t.__module__, t.__name__) for t in runtime.__mro__]
+
+    # Skip the class if it's private or in a private module. Stubs sometimes inherit from
+    # private classes for implementation reasons. Runtime classes can be complicated
+    # and incorrect stub subclassing of private classes isn't a bad false negative.
+    def can_skip_runtime(base: tuple[str, str]) -> bool:
+        return not is_good_base_runtime(base) or base[0].startswith("_") or base[1].startswith("_")
+
+    def can_skip_stub(base: tuple[str, str]) -> bool:
+        return not is_good_base_stub(base) or base[0].startswith("_") or base[1].startswith("_")
+
+    @functools.lru_cache(maxsize=None)
+    def mro_matches(stub_idx: int = 0, runtime_idx: int = 0) -> bool:
+        """Compare the MROs forgivingly, by allowing skipping of some classes."""
+        if stub_idx == len(stub_mro) and runtime_idx == len(runtime_mro):
+            return True
+        if stub_idx < len(stub_mro) and runtime_idx < len(runtime_mro):
+            if stub_mro[stub_idx][1].lstrip("_") == runtime_mro[runtime_idx][1].lstrip("_"):
+                return mro_matches(stub_idx + 1, runtime_idx + 1)
+        if stub_idx < len(stub_mro) and can_skip_stub(stub_mro[stub_idx]):
+            if mro_matches(stub_idx + 1, runtime_idx):
+                return True
+        if runtime_idx < len(runtime_mro) and can_skip_runtime(runtime_mro[runtime_idx]):
+            if mro_matches(stub_idx, runtime_idx + 1):
+                return True
+        return False
+
+    if mro_matches():
+        return
+
+    def types_repr(ts: list[tuple[str, str]]) -> str:
+        return ", ".join(".".join(t) for t in ts)
+
+    yield Error(
+        object_path,
+        "is inconsistent, base classes and MRO differ",
+        stub,
+        runtime,
+        stub_desc="{!r} inherits from {}\n".format(stub, types_repr(stub_bases))
+        + "MRO: {}".format(types_repr(stub_mro)),
+        runtime_desc="{!r} inherits from {}\n".format(runtime, types_repr(runtime_bases))
+        + "MRO: {}".format(types_repr(runtime_mro)),
+    )
+
+
 @verify.register(nodes.TypeInfo)
 def verify_typeinfo(
     stub: nodes.TypeInfo, runtime: MaybeMissing[type[Any]], object_path: list[str]
@@ -531,6 +719,8 @@ def verify_typeinfo(
     yield from _verify_metaclass(
         stub, runtime, object_path, is_runtime_typeddict=is_runtime_typeddict
     )
+
+    yield from _verify_inheritance(stub, runtime, object_path)
 
     # Check everything already defined on the stub class itself (i.e. not inherited)
     #
