@@ -4186,7 +4186,16 @@ class TypeChecker(NodeVisitor[None], CheckerPluginInterface):
             # partial type which will be made more specific later. A partial type
             # gets generated in assignment like 'x = []' where item type is not known.
             if not self.infer_partial_type(name, lvalue, init_type):
-                self.msg.need_annotation_for_var(name, context, self.options.python_version)
+                emit_message = True
+                proper_init_type = get_proper_type(init_type)
+                if isinstance(proper_init_type, UnionType):
+                    for item in proper_init_type.items:
+                        proper_item = get_proper_type(item)
+                        if isinstance(proper_item, AnyType):
+                            emit_message = False
+
+                if emit_message:
+                    self.msg.need_annotation_for_var(name, context, self.options.python_version)
                 self.set_inference_error_fallback_type(name, lvalue, init_type)
         elif (
             isinstance(lvalue, MemberExpr)
